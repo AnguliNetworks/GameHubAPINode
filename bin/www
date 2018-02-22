@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 'use strict';
 
-import {App} from '../src/server';
+const app = require('../src/app');
 
-new App(process.env.PORT === undefined ? 'development' : 'production', process.env.PORT || 8080);
+new app.App(process.env.PORT === undefined ? 'development' : 'production', process.env.PORT || '8080');

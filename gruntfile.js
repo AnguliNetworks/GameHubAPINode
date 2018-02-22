@@ -5,13 +5,12 @@ module.exports = function (grunt) {
         ts: {
             app: {
                 files: [{
-                    src: ['src/\\*\\*/\\*.ts', '!src/.baseDir.ts', '!src/_all.d.ts'],
-                    dest: '.'
+                    src: ['src/\*\*/\*.ts', '!src/.baseDir.ts', '!src/_all.d.ts'],
+                    dest: 'build/'
                 }]
             },
             options: {
                 module: "commonjs",
-                noLib: true,
                 target: "es6",
                 sourceMap: false
             }
@@ -38,6 +37,7 @@ module.exports = function (grunt) {
 
     grunt.registerTask('default', [
         'ts',
-        'tslint'
+        'tslint',
+        'watch'
     ]);
 };

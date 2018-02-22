@@ -7,6 +7,7 @@ export class Routes {
 
         // TODO ADD PATHS
         app.get('/', (request: express.Request, response: express.Response) => {
+            response.send('Hallo 123');
         });
 
     }
