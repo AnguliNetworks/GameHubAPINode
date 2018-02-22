@@ -10,24 +10,24 @@ module.exports = function (grunt) {
                 }]
             },
             options: {
-                module: "commonjs",
-                target: "es6",
+                module: 'commonjs',
+                target: 'es6',
                 sourceMap: false,
-                rootDir: "src/"
+                rootDir: 'src/'
             }
         },
         tslint: {
             options: {
-                configuration: "tslint.json"
+                configuration: 'tslint.json'
             },
             files: {
-                src: ["src/\*\*/\*.ts"]
+                src: ['src/\*\*/\*.ts']
             }
         },
         watch: {
             ts: {
-                files: ["js/src/\*\*/\*.ts", "src/\*\*/\*.ts"],
-                tasks: ["ts", "tslint"]
+                files: ['js/src/\*\*/\*.ts', 'src/\*\*/\*.ts'],
+                tasks: ['ts', 'tslint']
             }
         }
     });
