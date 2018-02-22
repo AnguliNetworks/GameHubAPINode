@@ -30,7 +30,7 @@ export class App {
         new Routes().paths(this.app);
 
         this.app.listen(process.env.PORT, () => {
-            console.log('The server is running on localhost:', process.env.PORT);
+            console.log('The server is running under localhost:', process.env.PORT);
         });
     }
 }
