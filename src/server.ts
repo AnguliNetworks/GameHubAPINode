@@ -34,6 +34,5 @@ export class App {
         this.app.listen(process.env.PORT, () => {
             console.log('The server is running on localhost:', process.env.PORT);
         });
-
     }
 }
