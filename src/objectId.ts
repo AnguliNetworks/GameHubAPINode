@@ -13,6 +13,10 @@ class ObjectId {
             ObjectId.format(Math.floor(Math.random() * 65535));
 
         ObjectId.counter++;
+
+        if (ObjectId.counter >= 65535) {
+            ObjectId.counter = 0;
+        }
     }
 
     private static format(number: number, length: number = 4) {
