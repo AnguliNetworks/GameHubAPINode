@@ -1,0 +1,35 @@
+import * as process from 'process';
+
+class ObjectId {
+
+    private static counter: number = Math.floor(Math.random() * 65535);
+    private value: String;
+
+    constructor() {
+        this.value =
+            ObjectId.format(new Date().getTime(), 12) +
+            ObjectId.format(process.pid) +
+            ObjectId.format(ObjectId.counter) +
+            ObjectId.format(Math.floor(Math.random() * 65535));
+
+        ObjectId.counter++;
+    }
+
+    private static format(number: number, length: number = 4) {
+        let hex: string = number.toString(16);
+
+        while (hex.length < length) {
+            hex = '0' + hex;
+        }
+
+        return hex;
+    }
+
+    public getValue() {
+        return this.value;
+    }
+}
+
+ObjectId.prototype.toString = () => this.getValue();
+
+export default ObjectId;

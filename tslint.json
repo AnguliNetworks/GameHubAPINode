@@ -4,6 +4,9 @@
       "ter-indent": [
         "error",
         2
-      ]
+      ],
+    "no-increment-decrement": [
+      "never"
+    ]
   }
 }
