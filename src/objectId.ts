@@ -29,11 +29,13 @@ class ObjectId {
         return hex;
     }
 
+    public toString() {
+        return this.getValue();
+    }
+
     public getValue() {
         return this.value;
     }
 }
 
-ObjectId.prototype.toString = () => this.getValue();
-
-export default ObjectId;
+export { ObjectId };
