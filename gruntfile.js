@@ -39,6 +39,5 @@ module.exports = function (grunt) {
     grunt.registerTask('default', [
         'ts',
         'tslint',
-        'watch'
     ]);
 };

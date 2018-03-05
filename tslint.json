@@ -8,6 +8,9 @@
     "no-increment-decrement": [
       "never"
     ],
+    "max-line-length": [
+      120
+    ],
     "trailing-comma": [
       true,
       {

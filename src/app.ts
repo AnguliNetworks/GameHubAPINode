@@ -4,7 +4,8 @@ import * as morgan from 'morgan';
 import * as compression from 'compression';
 import * as bodyParser from 'body-parser';
 import * as methodOverride from 'method-override';
-import { Routes } from './routes';
+import { router as authenticationRouter } from './routes/authentication';
+import { tokenGuard } from './middleware/token-guard';
 
 export class App {
     protected app: express.Application;
@@ -27,8 +28,11 @@ export class App {
         this.app.use(bodyParser.json());
         this.app.use(methodOverride());
 
-        new Routes().paths(this.app);
+        this.app.use('/', authenticationRouter);
+        this.app.use(tokenGuard());
 
+        this.app.post('/test', ((req, res) => res.json(true)));
+        
         this.app.listen(process.env.PORT, () => {
             console.log('The server is running under localhost:', process.env.PORT);
         });

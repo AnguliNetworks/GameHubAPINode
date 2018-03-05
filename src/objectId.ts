@@ -3,7 +3,7 @@ import * as process from 'process';
 class ObjectId {
 
     private static counter: number = Math.floor(Math.random() * 65535);
-    private value: String;
+    private value: string;
 
     constructor() {
         this.value =

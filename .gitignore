@@ -22,3 +22,5 @@ yarn-error.log*
 
 .idea
 .tscache
+
+src/config.ts

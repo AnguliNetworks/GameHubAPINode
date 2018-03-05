@@ -2,5 +2,8 @@
   "include": [
     "src",
     "types"
-  ]
+  ],
+  "compilerOptions": {
+    "target": "es6"
+  }
 }
