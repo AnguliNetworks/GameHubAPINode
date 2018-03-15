@@ -6,3 +6,13 @@ export const mysql = {
 };
 
 export const jwtSecret = 'secret';
+
+export const mail = {
+    host: 'smtp.example.com',
+    port: 465,
+    secure: true,
+    auth: {
+        user: 'username',
+        password: 'secret'
+    }
+};

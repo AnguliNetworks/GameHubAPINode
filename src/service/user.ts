@@ -4,9 +4,11 @@ import { user, UserAddModel, UserViewModel } from '../database/model/user';
 import { ObjectId } from '../objectId';
 import * as Bluebird from 'bluebird';
 import { jwtSecret } from '../config';
+import { MailService } from '../mail/service';
 
 export class UserService {
     private readonly saltrounds = 12;
+    private mailService = new MailService();
 
     static get userAttributes() {
         return ['id', 'username', 'createdAt'];
@@ -27,7 +29,9 @@ export class UserService {
                     id: new ObjectId().getValue(),
                     password: hash
                 })
-                    .then(() => true)
+                    .then(user =>
+                        this.mailService.sendTemplate(mail, 'Bestätige Deinen GameHubOne Account', 'registration', { userId: user.id })
+                    )
                     .catch(err => err)
             );
     }
