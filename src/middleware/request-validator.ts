@@ -3,7 +3,7 @@ export function check(key, type, customFunction?, message?) {
         const value = req.body[key];
 
         if (!value) {
-            res.status(400).send({ error: `Missing parameter ${key}` });
+            res.status(400).send({ error: `Der Paramater ${key} fehlt.` });
             return;
         }
 
@@ -20,12 +20,12 @@ export function check(key, type, customFunction?, message?) {
                 regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d!-}ä-üÄ-Üß §]{8,}$/;
                 break;
             default:
-                res.status(500).send({ error: `Parameter type ${type} not found.` });
+                res.status(500).send({ error: `Parametertyp ${type} nicht gefunden. Bitte kontaktiere den Support.` });
                 return;
         }
 
         if (!regex.test(value)) {
-            res.status(400).send({ error: `Invalid format for ${key}. Please use a valid ${type} format` });
+            res.status(400).send({ error: `Ungültiges Format. Das Feld '${key}' braucht ein '${type}'-Format` });
             return;
         }
 
@@ -36,7 +36,7 @@ export function check(key, type, customFunction?, message?) {
                         next();
                         return;
                     }
-                    res.status(400).send({ error: message ? message : 'Failed custom validation' });
+                    res.status(400).send({ error: message ? message : 'Eine Validation ist fehlgeschlagen. Bitte kontaktiere den Support.' });
                 })
                 .catch(error => res.status(500).send({ error }));
             return;

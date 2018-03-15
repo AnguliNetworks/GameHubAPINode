@@ -1,10 +1,12 @@
 import * as express from 'express';
 import * as helmet from 'helmet';
 import * as morgan from 'morgan';
+import * as cors from 'cors';
 import * as compression from 'compression';
 import * as bodyParser from 'body-parser';
 import * as methodOverride from 'method-override';
 import { router as authenticationRouter } from './routes/authentication';
+import { router as statusRouter } from './routes/status';
 import { tokenGuard } from './middleware/token-guard';
 
 export class App {
@@ -17,6 +19,7 @@ export class App {
 
         this.app = express();
         this.app.use(helmet.noCache());
+        this.app.use(cors());
 
         if (NODE_ENV === 'development') {
             this.app.use(morgan('dev'));
@@ -28,11 +31,12 @@ export class App {
         this.app.use(bodyParser.json());
         this.app.use(methodOverride());
 
+        this.app.use('/status', statusRouter);
         this.app.use('/', authenticationRouter);
         this.app.use(tokenGuard());
 
         this.app.post('/test', ((req, res) => res.json(true)));
-        
+
         this.app.listen(process.env.PORT, () => {
             console.log('The server is running under localhost:', process.env.PORT);
         });

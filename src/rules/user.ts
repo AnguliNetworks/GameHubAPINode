@@ -6,20 +6,20 @@ export const userRules = {
     forRegister: [
         check('mail', 'mail', mail =>
                 user.count({ where: { mail } }).then(count => !count)
-            , 'Email exists'),
+            , 'Die Mail ist bereits registriert.'),
         check('username', 'username', username =>
                 user.count({ where: { username } }).then(count => !count)
-            , 'Username exists'),
+            , 'Der Nutzername ist leider schon vergeben.'),
         check('password', 'password')
     ],
     forLogin: [
         check('mail', 'mail', mail =>
                 user.count({ where: { mail } }).then(count => count)
-            , 'Invalid mail or password'),
+            , 'Die Mailadresse oder das Passwort ist falsch.'),
         check('password', 'password', (password, { req }) =>
                 user.findOne({ where: { mail: req.body.mail } })
                     .then(user => bcrypt.compare(password, user!.password))
-            , 'Invalid mail or password'
+            , 'Die Mailadresse oder das Passwort ist falsch.'
         )
     ]
 };

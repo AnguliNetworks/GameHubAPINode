@@ -9,7 +9,7 @@ router.post('/register', userRules.forRegister, (req, res) =>
     userService.register(req.body).then(r => r)
         .then(() => res.send({
             success: true,
-            message: 'Dein Account wurde erstellt. Bitte bestätige Deine Mail, um Dich anmelden zu können.'
+            message: 'Dein Account wurde erstellt. Um Dich anzumelden, musst Du nur noch auf den Link in der Mail drücken, welche wir Dir zugeschickt haben..'
         }))
         .catch(error => res.status(500).send({ error })));
 
