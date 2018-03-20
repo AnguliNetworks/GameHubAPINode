@@ -1,66 +1,119 @@
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
-import { user, UserAddModel, UserViewModel } from '../database/model/user';
-import { ObjectId } from '../objectId';
-import * as Bluebird from 'bluebird';
+import { user as userModel, UserAddModel } from '../database/model/user';
+import { ObjectId } from '../helper/objectId';
 import { jwtSecret } from '../config';
 import { MailService } from '../mail/service';
+import { sequelize } from '../database/connector';
+import formatDate from '../helper/formatDate';
 
 export class UserService {
+
     private readonly saltrounds = 12;
     private mailService = new MailService();
 
-    static get userAttributes() {
-        return ['id', 'username', 'createdAt'];
-    }
+    register({ mail, username, password }) {
 
-    private static USER;
-
-    static get user() {
-        return UserService.USER;
-    }
-
-    register({ mail, username, password }: UserAddModel) {
-        return bcrypt.hash(password, this.saltrounds)
-            .then(hash =>
-                user.create({
-                    mail,
-                    username,
-                    id: new ObjectId().getValue(),
-                    password: hash
-                })
-                    .then(user =>
-                        this.mailService.sendTemplate(mail, 'Bestätige Deinen GameHubOne Account', 'registration', { userId: user.id })
+        return new Promise((resolve, reject) =>
+            bcrypt.hash(password, this.saltrounds)
+                .then(hash =>
+                    sequelize.transaction(transaction =>
+                        userModel.create(
+                            {
+                                mail, username, id: new ObjectId().getValue(), password: hash
+                            },
+                            { transaction })
                     )
-                    .catch(err => err)
-            );
+                        .then((user) => {
+                                this.mailService.sendTemplate(
+                                    mail,
+                                    'Bestätige Deinen GameHubOne Account',
+                                    'registration',
+                                    { userId: user.id }
+                                );
+                                resolve();
+                            }
+                        )
+                        .catch(err => reject(err))
+                )
+        );
+    }
+
+    confirmAccount({ id }: UserAddModel) {
+
+        return new Promise((resolve, reject) =>
+            sequelize.transaction(transaction =>
+                userModel.update({ lastLogin: formatDate() }, {
+                    transaction,
+                    where: {
+                        id, lastLogin: null
+                    }
+                })
+            )
+                .then((changedRows) => {
+
+                    if (changedRows[0] !== 1) {
+                        reject();
+                        return;
+                    }
+
+                    resolve();
+                })
+                .catch(err => reject(err))
+        );
     }
 
     login({ mail }: UserAddModel) {
-        return user.findOne({ where: { mail } })
-            .then((user) => {
-                const { id, mail } = user!;
-                return { token: jwt.sign({ id, mail }, jwtSecret) };
-            });
+
+        return new Promise((resolve, reject) =>
+            userModel.findOne({ where: { mail } })
+                .then((user) => {
+                    const currentDate = formatDate();
+
+                    sequelize.transaction(transaction =>
+                        userModel.update({ lastLogin: currentDate }, {
+                            transaction,
+                            where: {
+                                id: user.id,
+                                lastLogin: {
+                                    [sequelize.Op.ne]: null
+                                }
+                            }
+                        })
+                            .then((changedRows) => {
+                                if (changedRows[0] !== 1) {
+                                    throw new Error('Bitte bestätige Deinen Account');
+                                }
+                            })
+                    )
+                        .then(() => {
+                            const { id, mail } = user;
+                            resolve({
+                                token: jwt.sign({ id, mail, lastLogin: currentDate }, jwtSecret)
+                            });
+                        })
+                        .catch(err => reject(err.message));
+                }));
     }
 
     verifyToken(token: string) {
-        return new Promise((resolve) => {
+
+        return new Promise((resolve, reject) => {
             jwt.verify(token, jwtSecret, (err, decoded) => {
                 if (err) {
-                    resolve(false);
+                    reject();
                     return;
                 }
 
-                UserService.USER = user.findById(decoded['id']);
-                resolve(true);
+                userModel.findOne({ where: { id: decoded['id'], lastLogin: decoded['lastLogin'] } })
+                    .then(() => resolve())
+                    .catch(() => reject());
             });
-        }) as Promise<boolean>;
+        });
     }
 
-    static getUserById(id: string) {
-        return user.findById(id, {
-            attributes: UserService.userAttributes
-        }) as Bluebird<UserViewModel>;
+    static getTokenData(token: string) {
+
+        return jwt.decode(token);
     }
 }

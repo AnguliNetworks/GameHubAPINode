@@ -1,6 +1,6 @@
 export function check(key, type, customFunction?, message?) {
     return (req, res, next) => {
-        const value = req.body[key];
+        const value = req.body[key] || req.query[key] || req.params[key];
 
         if (!value) {
             res.status(400).send({ error: `Der Paramater ${key} fehlt.` });
@@ -18,6 +18,9 @@ export function check(key, type, customFunction?, message?) {
                 break;
             case 'password':
                 regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d!-}ä-üÄ-Üß §]{8,}$/;
+                break;
+            case 'none':
+                regex = /.*/;
                 break;
             default:
                 res.status(500).send({ error: `Parametertyp ${type} nicht gefunden. Bitte kontaktiere den Support.` });

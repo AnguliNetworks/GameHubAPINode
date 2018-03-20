@@ -2,10 +2,11 @@ import * as Sequelize from 'sequelize';
 import { sequelize } from '../connector';
 
 export interface UserAddModel {
-    id: string;
-    mail: string;
-    username: string;
-    password: string;
+    id?: string;
+    mail?: string;
+    username?: string;
+    password?: string;
+    lastLogin?: string;
 }
 
 export interface UserModel extends Sequelize.Model<UserModel, UserAddModel> {
@@ -13,14 +14,13 @@ export interface UserModel extends Sequelize.Model<UserModel, UserAddModel> {
     mail: string;
     username: string;
     password: string;
-    createdAt: string;
-    updatedAt: string;
+    lastLogin: string;
 }
 
 export interface UserViewModel {
     id: string;
     username: string;
-    createdAt: string;
+    lastLogin: string;
 }
 
 export const user = sequelize.define<UserModel, UserAddModel>('user', {
@@ -31,6 +31,5 @@ export const user = sequelize.define<UserModel, UserAddModel>('user', {
     mail: Sequelize.STRING,
     username: Sequelize.STRING,
     password: Sequelize.STRING,
-    createdAt: Sequelize.DATE,
-    updatedAt: Sequelize.DATE
+    lastLogin: 'TIMESTAMP'
 });
