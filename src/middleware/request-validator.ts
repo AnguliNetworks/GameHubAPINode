@@ -19,6 +19,9 @@ export function check(key, type, customFunction?, message?) {
             case 'password':
                 regex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)[A-Za-z\d!-}ä-üÄ-Üß §]{8,}$/;
                 break;
+            case 'int':
+                regex = /^(-?)\d+$/;
+                break;
             case 'none':
                 regex = /.*/;
                 break;
@@ -41,7 +44,7 @@ export function check(key, type, customFunction?, message?) {
                     }
                     res.status(400).send({ error: message ? message : 'Eine Validation ist fehlgeschlagen. Bitte kontaktiere den Support.' });
                 })
-                .catch(error => res.status(500).send({ error }));
+                .catch(error => res.status(400).send({ error }));
             return;
         }
 
