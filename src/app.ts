@@ -7,7 +7,7 @@ import * as bodyParser from 'body-parser';
 import * as methodOverride from 'method-override';
 import { router as authenticationRouter } from './routes/authentication';
 import { router as statusRouter } from './routes/status';
-import { router as launcherRouter } from './routes/launcher';
+import { router as gameRouter } from './routes/game';
 import { tokenGuard } from './middleware/token-guard';
 
 export class App {
@@ -37,7 +37,7 @@ export class App {
 
         this.app.use(tokenGuard());
 
-        this.app.use('/launcher', launcherRouter);
+        this.app.use('/game', gameRouter);
 
         this.app.listen(process.env.PORT, () => {
             console.log('The server is running under localhost:', process.env.PORT);

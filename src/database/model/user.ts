@@ -17,12 +17,6 @@ export interface UserModel extends Sequelize.Model<UserModel, UserAddModel> {
     lastLogin: string;
 }
 
-export interface UserViewModel {
-    id: string;
-    username: string;
-    lastLogin: string;
-}
-
 export const user = sequelize.define<UserModel, UserAddModel>('user', {
     id: {
         type: Sequelize.STRING,
