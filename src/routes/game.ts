@@ -1,8 +1,13 @@
 import { Router } from 'express';
 import { GameService } from '../service/game';
 import { gameRules } from '../rules/game';
+import { ObjectId } from '../helper/objectId';
 
 export const router = Router();
+
+router.get('/id', (req, res) => {
+    res.send(new ObjectId().toString());
+});
 
 router.post('/page/:page', gameRules.hasPage, (req, res) => {
         GameService.getPage({ page: req.params.page })
