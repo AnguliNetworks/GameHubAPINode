@@ -6,6 +6,12 @@ import { FriendshipService } from '../service/friendship';
 
 export const router = Router();
 
+router.get('/list', ((req, res) => {
+    FriendshipService.getFriendList({ user: UserService.getTokenData(req.query.token).id })
+        .then(list => res.json(list))
+        .catch(error => res.status(500).json({ error }));
+}));
+
 router.post(['/add', '/accept'], friendshipRules.addOrAccept, (req, res) => {
     userModel.findOne({
         where: { username: req.body.username }

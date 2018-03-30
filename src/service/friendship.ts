@@ -1,13 +1,13 @@
 import { friendship as friendshipModel } from '../database/model/friendship';
 import { Op } from 'sequelize';
+import { sequelize } from '../database/connector';
 
 export class FriendshipService {
 
     static getFriendList({ user }) {
-        return friendshipModel.findAll({
+        return user.findAll({
             where: {
-                [Op.or]: [{ wantsToBe: user }, { couldBe: user }],
-                accepted: true
+                id: user
             }
         });
     }
@@ -21,14 +21,41 @@ export class FriendshipService {
                 }
             })
                 .then((friendRequest) => {
-                    console.log(friendRequest);
+
+                    if (!friendRequest) {
+                        sequelize.transaction(transaction =>
+                            friendshipModel.create(
+                                {
+                                    wantsToBe, couldBe
+                                },
+                                { transaction })
+                        )
+                            .then((friendRequest) => {
+                                resolve('Freundschaftsanfrage wurde verschickt');
+                            });
+                        return;
+                    }
 
                     if (friendRequest.accepted) {
                         reject('Ihr seid bereits befreundet.');
                         return;
                     }
 
-                    // TODO HANDLE REST OF FRIEND STUFF
+                    if (friendRequest.couldBe === wantsToBe) {
+                        sequelize.transaction(transaction =>
+                            friendRequest.update({ accepted: true }, {
+                                transaction,
+                                where: {
+                                    wantsToBe: friendRequest.wantsToBe,
+                                    couldBe: friendRequest.couldBe
+                                }
+                            })
+                        )
+                            .then(() => resolve('Freundschaftsanfrage bestätigt.'));
+                        return;
+                    }
+
+                    reject('Du hast dem Nutzer bereits eine Freundschaftsanfrage geschickt. Warte bis er sie annimmt.');
                 })
                 .catch(err => reject(err));
         });

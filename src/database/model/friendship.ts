@@ -15,25 +15,39 @@ export interface FriendshipModel extends Sequelize.Model<FriendshipModel, Friend
     accepted: boolean;
 }
 
-export const friendship = sequelize.define<FriendshipModel, FriendshipAddModel>('friendship', {
-    wantsToBe: {
-        type: Sequelize.STRING,
-        field: 'wants_to_be',
-        references: {
-            model: user,
-            key: 'id'
+export const friendship = sequelize.define<FriendshipModel, FriendshipAddModel>(
+    'friendship',
+    {
+        wantsToBe: {
+            type: Sequelize.STRING,
+            field: 'wants_to_be',
+
+            primaryKey: true,
+
+            references: {
+                model: user,
+                key: 'id'
+            }
+        },
+        couldBe: {
+            type: Sequelize.STRING,
+            field: 'could_be',
+
+            primaryKey: true,
+
+            references: {
+                model: user,
+                key: 'id'
+            }
+        },
+        accepted: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: false
         }
+
     },
-    couldBe: {
-        type: Sequelize.STRING,
-        field: 'could_be',
-        references: {
-            model: user,
-            key: 'id'
-        }
-    },
-    accepted: {
-        type: Sequelize.BOOLEAN,
-        defaultValue: false
-    }
-});
+    {
+        tableName: 'friendship'
+    });
+
+user.belongsToMany(user, { through: 'friendship' });
