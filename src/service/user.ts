@@ -105,7 +105,13 @@ export class UserService {
                     return;
                 }
 
-                userModel.findOne({ where: { id: decoded['id'], lastLogin: decoded['lastLogin'] } })
+                userModel.findOne({
+                    where: {
+                        id: decoded['id'],
+                        mail: decoded['mail'],
+                        lastLogin: decoded['lastLogin']
+                    }
+                })
                     .then((user) => {
                         if (!user) {
                             reject();
