@@ -1,6 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
-import { user as userModel, UserAddModel } from '../database/model/user';
+import { user as userModel, UserAddModel, UserViewModel } from '../database/model/user';
 import { ObjectId } from '../helper/objectId';
 import { jwtSecret } from '../config';
 import { MailService } from '../mail/service';
@@ -105,6 +105,7 @@ export class UserService {
                     return;
                 }
 
+                // TODO: HANDLE WHEN USER WAS NOT FOUND
                 userModel.findOne({ where: { id: decoded['id'], lastLogin: decoded['lastLogin'] } })
                     .then(() => resolve())
                     .catch(() => reject());
@@ -114,6 +115,6 @@ export class UserService {
 
     static getTokenData(token: string) {
 
-        return jwt.decode(token);
+        return jwt.decode(token) as UserViewModel;
     }
 }
