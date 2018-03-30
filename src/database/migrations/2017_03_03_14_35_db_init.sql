@@ -16,3 +16,11 @@ CREATE TABLE games (
   github_name       VARCHAR(100)         NOT NULL,
   authorized_commit CHAR(40)             NOT NULL
 );
+
+CREATE TABLE friendship (
+  wants_to_be CHAR(24)              NOT NULL,
+  could_be    CHAR(24)              NOT NULL,
+  accepted    BOOLEAN DEFAULT FALSE NOT NULL,
+  FOREIGN KEY (wants_to_be) REFERENCES users (id),
+  FOREIGN KEY (could_be) REFERENCES users (id)
+);
