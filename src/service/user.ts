@@ -105,9 +105,14 @@ export class UserService {
                     return;
                 }
 
-                // TODO: HANDLE WHEN USER WAS NOT FOUND
                 userModel.findOne({ where: { id: decoded['id'], lastLogin: decoded['lastLogin'] } })
-                    .then(() => resolve())
+                    .then((user) => {
+                        if (!user) {
+                            reject();
+                            return;
+                        }
+                        resolve();
+                    })
                     .catch(() => reject());
             });
         });
