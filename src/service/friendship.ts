@@ -1,15 +1,24 @@
 import { friendship as friendshipModel } from '../database/model/friendship';
-import { Op } from 'sequelize';
+import { Op, QueryTypes } from 'sequelize';
 import { sequelize } from '../database/connector';
 
 export class FriendshipService {
 
     static getFriendList({ user }) {
-        return user.findAll({
-            where: {
-                id: user
+        return sequelize.query(
+            `SELECT CASE WHEN \`friendship\`.\`wants_to_be\` = ?
+                    THEN c.username
+                         ELSE w.username END AS 'friend'
+                  FROM \`friendship\` AS \`friendship\`
+                    JOIN \`users\` AS w ON \`friendship\`.\`wants_to_be\` = w.\`id\`
+                    JOIN \`users\` AS c ON \`friendship\`.\`could_be\` = c.\`id\`
+                  WHERE
+                    (\`friendship\`.\`wants_to_be\` = ? OR \`friendship\`.\`could_be\` = ?) AND \`friendship\`.\`accepted\` = TRUE;`,
+            {
+                replacements: [user, user, user],
+                type: QueryTypes.SELECT
             }
-        });
+        );
     }
 
     static addFriendOrAcceptRequest({ wantsToBe, couldBe }) {

@@ -49,5 +49,3 @@ export const friendship = sequelize.define<FriendshipModel, FriendshipAddModel>(
     {
         tableName: 'friendship'
     });
-
-user.belongsToMany(user, { through: 'friendship' });
