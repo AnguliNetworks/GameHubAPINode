@@ -37,16 +37,12 @@ export function check(key, type, customFunction?, message?) {
 
         if (customFunction) {
             customFunction(value, { req, res })
-                .then((result) => {
-                    if (result) {
-                        next();
-                        return;
-                    }
-                    res.status(400).send({ error: message ? message : 'Eine Validation ist fehlgeschlagen. Bitte kontaktiere den Support.' });
-                })
+                .then(next)
                 .catch((error) => {
                     if (typeof error === 'object') {
                         res.status(error.code).json({ error: error.message });
+                    } else if (!error) {
+                        res.status(400).send({ error: message });
                     } else {
                         res.status(400).send({ error });
                     }
