@@ -4,6 +4,19 @@ import { sequelize } from '../database/connector';
 
 export class FriendshipService {
 
+    static getRequests({ user }) {
+        return sequelize.query(
+            `SELECT \`users\`.username
+                  FROM \`friendship\` AS \`friendship\`
+                    JOIN \`users\` ON \`friendship\`.\`wants_to_be\` = \`users\`.\`id\`
+                  WHERE \`friendship\`.\`accepted\` = FALSE AND \`friendship\`.\`could_be\` = ?;`,
+            {
+                replacements: [user],
+                type: QueryTypes.SELECT
+            }
+        );
+    }
+
     static getFriendList({ user }) {
         return sequelize.query(
             `SELECT CASE WHEN \`friendship\`.\`wants_to_be\` = ?
