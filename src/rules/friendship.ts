@@ -1,3 +1,4 @@
+import { Op } from 'sequelize';
 import { check } from '../middleware/request-validator';
 import { user as userModel } from '../database/model/user';
 
@@ -7,7 +8,12 @@ export const friendshipRules = {
             'username', 'username',
             (username, { req, res }) => new Promise((resolve, reject) =>
                 userModel.findOne({
-                    where: { username },
+                    where: {
+                        username,
+                        lastLogin: {
+                            [Op.ne]: null
+                        }
+                    },
                     attributes: ['id']
                 })
                     .then((user) => {
