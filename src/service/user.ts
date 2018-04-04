@@ -66,7 +66,10 @@ export class UserService {
     login({ mail }: UserAddModel) {
 
         return new Promise((resolve, reject) =>
-            userModel.findOne({ where: { mail } })
+            userModel.findOne({
+                where: { mail },
+                attributes: ['id', 'mail']
+            })
                 .then((user) => {
                     const currentDate = formatDate();
 
@@ -105,15 +108,15 @@ export class UserService {
                     return;
                 }
 
-                userModel.findOne({
+                userModel.count({
                     where: {
                         id: decoded['id'],
                         mail: decoded['mail'],
                         lastLogin: decoded['lastLogin']
                     }
                 })
-                    .then((user) => {
-                        if (!user) {
+                    .then((count) => {
+                        if (count !== 1) {
                             reject();
                             return;
                         }
