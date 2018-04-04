@@ -9,6 +9,12 @@ export interface UserAddModel {
     lastLogin?: string;
 }
 
+export interface UserViewModel {
+    id: string;
+    username: string;
+    lastLogin: string;
+}
+
 export interface UserModel extends Sequelize.Model<UserModel, UserAddModel> {
     id: string;
     mail: string;
