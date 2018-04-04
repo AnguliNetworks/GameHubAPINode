@@ -14,8 +14,14 @@ function getTokenFromHeaders(headers: IncomingHttpHeaders) {
     return header.split(' ')[1];
 }
 
-export const tokenGuard: (() => RequestHandler) = (() => (req, res, next) =>
-        userService.verifyToken(getTokenFromHeaders(req.headers) || req.query.token || req.body.token || '')
-            .then(next)
-            .catch(() => res.status(403).send({ message: 'No access' }))
+export const tokenGuard: (() => RequestHandler) = (() => (req, res, next) => {
+
+        const token = getTokenFromHeaders(req.headers) || req.query.token || req.body.token || '';
+        userService.verifyToken(token)
+            .then(() => {
+                res.locals.token = UserService.getTokenData(token);
+                next();
+            })
+            .catch(() => res.status(403).send({ message: 'No access' }));
+    }
 );

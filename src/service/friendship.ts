@@ -34,7 +34,7 @@ export class FriendshipService {
         );
     }
 
-    static addFriendOrAcceptRequest({ wantsToBe, couldBe }) {
+    static addFriend({ wantsToBe, couldBe }) {
         return new Promise((resolve, reject) => {
             friendshipModel.findOne({
                 where: {
@@ -52,9 +52,9 @@ export class FriendshipService {
                                 },
                                 { transaction })
                         )
-                            .then((friendRequest) => {
-                                resolve('Freundschaftsanfrage wurde verschickt');
-                            });
+                            .then(() =>
+                                resolve('Freundschaftsanfrage wurde verschickt')
+                            );
                         return;
                     }
 
@@ -83,4 +83,31 @@ export class FriendshipService {
         });
     }
 
+    static removeFriend({ himself, friend }) {
+        return new Promise((resolve, reject) =>
+            friendshipModel.findOne({
+                where: {
+                    [Op.or]: [{ wantsToBe: friend, couldBe: himself }, { wantsToBe: himself, couldBe: friend }]
+                }
+            })
+                .then((friendRequest) => {
+                    if (!friendRequest) {
+                        reject('Ihr seid gar nicht befreundet.');
+                        return;
+                    }
+
+                    sequelize.transaction(transaction =>
+                        friendRequest.destroy({ transaction })
+                    )
+                        .then(() =>
+                            resolve(
+                                friendRequest.accepted ?
+                                    'Ihr seid jetzt nicht mehr befreundet.' :
+                                    'Freundschaftsanfrage entfernt.'
+                            )
+                        )
+                        .catch(err => reject(err));
+                })
+        );
+    }
 }

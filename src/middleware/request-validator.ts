@@ -44,7 +44,13 @@ export function check(key, type, customFunction?, message?) {
                     }
                     res.status(400).send({ error: message ? message : 'Eine Validation ist fehlgeschlagen. Bitte kontaktiere den Support.' });
                 })
-                .catch(error => res.status(400).send({ error }));
+                .catch((error) => {
+                    if (typeof error === 'object') {
+                        res.status(error.code).json({ error: error.message });
+                    } else {
+                        res.status(400).send({ error });
+                    }
+                });
             return;
         }
 
