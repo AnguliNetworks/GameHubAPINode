@@ -13,18 +13,18 @@ router.get('/id', (req, res) => {
 router.get('/page/:page', gameRules.hasPage, (req, res) => {
         GameService.getPage({ page: req.params.page })
             .then(answer => res.json(answer))
-            .catch(err => res.status(500).send(err));
+            .catch(err => res.status(500).json(err));
     }
 );
 
 router.get('/link/:id', gameRules.hasId, (req, res) =>
     GameService.getDownloadLink({ id: req.params.id })
         .then(link => res.json({ link }))
-        .catch(err => res.status(500).send(err))
+        .catch(err => res.status(500).json(err))
 );
 
 router.get('/info/:id', gameRules.hasId, (req, res) =>
     GameService.getGameInfo({ id: req.params.id })
         .then(answer => res.json(answer))
-        .catch(err => res.status(500).send(err))
+        .catch(err => res.status(500).json(err))
 );

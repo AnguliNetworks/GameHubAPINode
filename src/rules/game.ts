@@ -7,7 +7,7 @@ export const gameRules = {
     hasPage: [
         check('page', 'int', number => new Promise((resolve, reject) => {
             if (number > 0) {
-                resolve(true);
+                resolve();
             } else {
                 reject('Der Paramter `page` muss mindestens 1 sein.');
             }
