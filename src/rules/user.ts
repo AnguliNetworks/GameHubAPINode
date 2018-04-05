@@ -53,6 +53,9 @@ export const userRules = {
                     )
                 , 'Die Mailadresse oder das Passwort ist falsch.'
             )
+        ],
+        changeAvatar: [
+            check('avatar', 'none')
         ]
     }
 ;

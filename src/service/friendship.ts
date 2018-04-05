@@ -19,16 +19,20 @@ export class FriendshipService {
 
     static getFriendList({ user }) {
         return sequelize.query(
-            `SELECT CASE WHEN \`friendship\`.\`wants_to_be\` = ?
-                    THEN c.username
-                         ELSE w.username END AS 'friend'
+            `SELECT 
+                    CASE WHEN \`friendship\`.\`wants_to_be\` = ?
+                        THEN c.username
+                    ELSE w.username END AS 'name',
+                    CASE WHEN \`friendship\`.\`wants_to_be\` = ?
+                        THEN c.avatar
+                    ELSE w.avatar END   AS 'avatar'
                   FROM \`friendship\` AS \`friendship\`
                     JOIN \`users\` AS w ON \`friendship\`.\`wants_to_be\` = w.\`id\`
                     JOIN \`users\` AS c ON \`friendship\`.\`could_be\` = c.\`id\`
                   WHERE
                     (\`friendship\`.\`wants_to_be\` = ? OR \`friendship\`.\`could_be\` = ?) AND \`friendship\`.\`accepted\` = TRUE;`,
             {
-                replacements: [user, user, user],
+                replacements: [user, user, user, user],
                 type: QueryTypes.SELECT
             }
         );

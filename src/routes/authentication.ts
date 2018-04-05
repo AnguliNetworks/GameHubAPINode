@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { UserService } from '../service/user';
 import { userRules } from '../rules/user';
 import * as fs from 'fs';
+import { tokenGuard } from '../middleware/token-guard';
 
 export const router = Router();
 const userService = new UserService();
@@ -42,3 +43,7 @@ router.post('/login', userRules.forLogin, (req, res) =>
         .then(token => res.json(token))
         .catch(error => res.status(500).send({ error }))
 );
+
+router.get('/authenticated', tokenGuard(), (req, res) => {
+    res.status(200).json({ authenticated: true });
+});

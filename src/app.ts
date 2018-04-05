@@ -7,6 +7,7 @@ import * as bodyParser from 'body-parser';
 import * as methodOverride from 'method-override';
 import { router as authenticationRouter } from './routes/authentication';
 import { router as statusRouter } from './routes/status';
+import { router as userRouter } from './routes/user';
 import { router as gameRouter } from './routes/game';
 import { router as friendshipRouter } from './routes/friendship';
 import { tokenGuard } from './middleware/token-guard';
@@ -38,6 +39,7 @@ export class App {
 
         this.app.use(tokenGuard());
 
+        this.app.use('/user', userRouter);
         this.app.use('/game', gameRouter);
         this.app.use('/friendship', friendshipRouter);
 

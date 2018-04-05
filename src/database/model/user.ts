@@ -7,12 +7,14 @@ export interface UserAddModel {
     username?: string;
     password?: string;
     lastLogin?: string;
+    avatar?: string;
 }
 
 export interface UserViewModel {
     id: string;
     username: string;
     lastLogin: string;
+    avatar: string;
 }
 
 export interface UserModel extends Sequelize.Model<UserModel, UserAddModel> {
@@ -21,6 +23,7 @@ export interface UserModel extends Sequelize.Model<UserModel, UserAddModel> {
     username: string;
     password: string;
     lastLogin: string;
+    avatar: string;
 }
 
 export const user = sequelize.define<UserModel, UserAddModel>('user', {
@@ -31,5 +34,6 @@ export const user = sequelize.define<UserModel, UserAddModel>('user', {
     mail: Sequelize.STRING,
     username: Sequelize.STRING,
     password: Sequelize.STRING,
-    lastLogin: 'TIMESTAMP'
+    lastLogin: 'TIMESTAMP',
+    avatar: Sequelize.STRING
 });

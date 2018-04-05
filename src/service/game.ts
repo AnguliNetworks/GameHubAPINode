@@ -9,7 +9,7 @@ export class GameService {
             offset: page * 10 - 10,
             limit: 10,
             order: [['id', 'DESC']],
-            attributes: ['id', 'name', 'author']
+            attributes: ['id', 'name', 'author', 'icon']
         });
     }
 

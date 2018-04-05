@@ -16,3 +16,7 @@ export const mail = {
         password: 'secret'
     }
 };
+
+export const imgur = {
+    clientId: 'clientId'
+};

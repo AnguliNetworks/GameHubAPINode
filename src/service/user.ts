@@ -99,6 +99,17 @@ export class UserService {
                 }));
     }
 
+    static updateAvatar({ user, url }) {
+        return sequelize.transaction(transaction =>
+            userModel.update({ avatar: url }, {
+                transaction,
+                where: {
+                    id: user
+                }
+            })
+        );
+    }
+
     verifyToken(token: string) {
 
         return new Promise((resolve, reject) => {
@@ -126,6 +137,7 @@ export class UserService {
             });
         });
     }
+
 
     static getTokenData(token: string) {
 
