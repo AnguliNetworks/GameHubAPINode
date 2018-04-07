@@ -8,7 +8,7 @@ import { userRules } from '../rules/user';
 export const router = Router();
 
 // TODO ADD RULES
-router.get('/info/:user', (req, res) => {
+router.get('/info/:user', userRules.getUserInfo, (req, res) => {
     UserService.getUserInfo({ user: req.params.user === 'me' ? res.locals.token.id : req.params.user })
         .then(user => res.json(user))
         .catch(error => res.status(500).json({ error }));
