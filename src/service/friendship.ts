@@ -6,7 +6,7 @@ export class FriendshipService {
 
     static getRequests({ user }) {
         return sequelize.query(
-            `SELECT \`users\`.username
+            `SELECT \`users\`.\`username\`, \`users\`.\`avatar\`
                   FROM \`friendship\` AS \`friendship\`
                     JOIN \`users\` ON \`friendship\`.\`wants_to_be\` = \`users\`.\`id\`
                   WHERE \`friendship\`.\`accepted\` = FALSE AND \`friendship\`.\`could_be\` = ?;`,

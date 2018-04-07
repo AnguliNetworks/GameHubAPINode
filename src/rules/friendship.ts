@@ -34,8 +34,9 @@ export const friendshipRules = {
                         }
 
                         req.body.userId = user.id;
-                        resolve(true);
+                        resolve();
                     })
+                    .catch(error => reject({ error, code: 500 }))
             )
         )
     ]

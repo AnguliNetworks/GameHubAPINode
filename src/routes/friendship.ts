@@ -22,7 +22,7 @@ router.post(['/add', '/accept'], friendshipRules.addOrRemove, (req, res) =>
         .catch(error => res.status(400).json({ error }))
 );
 
-router.delete(['/remove', '/decline'], friendshipRules.addOrRemove, (req, res) =>
+router.post(['/remove', '/decline'], friendshipRules.addOrRemove, (req, res) =>
     FriendshipService.removeFriend({ himself: res.locals.token.id, friend: req.body.userId })
         .then(message => res.json({ message }))
         .catch(error => res.status(400).json({ error }))
