@@ -1,5 +1,6 @@
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
+import { Op } from 'sequelize';
 import { user as userModel, UserAddModel, UserViewModel } from '../database/model/user';
 import { ObjectId } from '../helper/objectId';
 import { jwtSecret } from '../config';
@@ -97,6 +98,15 @@ export class UserService {
                         })
                         .catch(err => reject(err.message));
                 }));
+    }
+
+    static getUserInfo({ user }) {
+        return userModel.findOne({
+            where: {
+                [Op.or]: [{ username: user }, { id: user }]
+            },
+            attributes: ['username', 'avatar']
+        });
     }
 
     static updateAvatar({ user, url }) {

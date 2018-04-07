@@ -7,7 +7,7 @@ CREATE TABLE users (
   username  VARCHAR(32)                                           NOT NULL,
   password  CHAR(60)                                              NOT NULL,
   lastLogin TIMESTAMP                                             NULL,
-  avatar    VARCHAR(64) DEFAULT 'https://i.imgur.com/ZKxOqmm.png' NOT NULL
+  avatar    VARCHAR(64) DEFAULT 'https://i.imgur.com/ZqZiQoW.png' NOT NULL
 );
 
 CREATE TABLE games (
