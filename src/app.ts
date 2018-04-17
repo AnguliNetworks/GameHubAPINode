@@ -5,12 +5,14 @@ import * as cors from 'cors';
 import * as compression from 'compression';
 import * as bodyParser from 'body-parser';
 import * as methodOverride from 'method-override';
+import { Server } from 'http';
 import { router as authenticationRouter } from './routes/authentication';
 import { router as statusRouter } from './routes/status';
 import { router as userRouter } from './routes/user';
 import { router as gameRouter } from './routes/game';
 import { router as friendshipRouter } from './routes/friendship';
 import { tokenGuard } from './middleware/token-guard';
+import { Socket } from './socket/socket';
 
 export class App {
     protected app: express.Application;
@@ -43,8 +45,13 @@ export class App {
         this.app.use('/game', gameRouter);
         this.app.use('/friendship', friendshipRouter);
 
-        this.app.listen(process.env.PORT, () => {
+        const server = new Server(this.app);
+
+        new Socket(server);
+        
+        server.listen(process.env.PORT, () => {
             console.log('The server is running under localhost:', process.env.PORT);
         });
+
     }
 }

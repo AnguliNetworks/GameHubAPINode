@@ -141,7 +141,7 @@ export class UserService {
                             reject();
                             return;
                         }
-                        resolve();
+                        resolve(decoded);
                     })
                     .catch(() => reject());
             });
